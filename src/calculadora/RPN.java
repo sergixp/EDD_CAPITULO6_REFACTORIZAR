@@ -39,7 +39,13 @@ public class RPN {
 		return dato_arriba;
 	}
 
+	//MÉTODO QUE OBTIENE EL RESULTADO DE LA EXPRESIÓN EN NOTACIÓN POLACA INVERSA
 	public double resultado() {
+		recorre_pila_y_calcula();																//Método creado al refactorizar.
+		return comprobar_nodo_return_valor();									//Método creado al refactorizar.
+	}
+	
+	void recorre_pila_y_calcula() {
 		double a=0, b=0;
 		char operacion;
 		for (int i = 0; i < commando.length(); i++) {
@@ -50,11 +56,6 @@ public class RPN {
 				realizar_operacion(a,b,operacion);									//Método creado al refactorizar.
 			}
 		}
-		double val = popPila();
-		if (arriba != null) {
-			throw new IllegalArgumentException();
-		}
-		return val;
 	}
 	
 	void conversion_y_a_pila(int i) {																	
@@ -66,8 +67,16 @@ public class RPN {
 		}
 		numero = Double.parseDouble(temp);
 		pushPila(numero);
-}
-
+	}
+	
+	double comprobar_nodo_return_valor() {
+		double val = popPila();
+		if (arriba != null) {
+			throw new IllegalArgumentException();
+		}
+		return val;
+	}
+	
 	void realizar_operacion(double a, double b, char operacion) {
 		if (operacion == '+')
 			sumar(a, b);
