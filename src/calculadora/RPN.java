@@ -40,47 +40,14 @@ public class RPN {
 	}
 
 	public double resultado() {
-		double a, b;
-		int j;
+		double a=0, b=0;
+		char operacion;
 		for (int i = 0; i < commando.length(); i++) {
-			// si es un digito
-			if (Character.isDigit(commando.charAt(i))) {
-				double numero;
-				// obtener un string a partir del numero
-				String temp = "";
-				for (j = 0; (j < 100)
-						&& (Character.isDigit(commando.charAt(i)) || (commando.charAt(i) == '.')); j++, i++) {
-					temp = temp + String.valueOf(commando.charAt(i));
-				}
-				// convertir a double y añadir a la pila
-				numero = Double.parseDouble(temp);
-				pushPila(numero);
-			} else if (commando.charAt(i) == '+') {
-				b = popPila();
-				a = popPila();
-				pushPila(a + b);
-			} else if (commando.charAt(i) == '-') {
-				b = popPila();
-				a = popPila();
-				pushPila(a - b);
-			} else if (commando.charAt(i) == '*') {
-				b = popPila();
-				a = popPila();
-				pushPila(a * b);
-			} else if (commando.charAt(i) == '/') {
-				b = popPila();
-				a = popPila();
-				pushPila(a / b);
-			} else if (commando.charAt(i) == '^') {
-				b = popPila();
-				a = popPila();
-				pushPila(Math.pow(a, b));
-			} else if (commando.charAt(i) == '%') {
-				b = popPila();
-				a = popPila();
-				pushPila(a % b);
-			} else if (commando.charAt(i) != ' ') {
-				throw new IllegalArgumentException();
+			if (Character.isDigit(commando.charAt(i))) {									
+				conversion_y_a_pila(i);															//Método creado al refactorizar.									
+			}else {																												
+				operacion = commando.charAt(i);														
+				realizar_operacion(a,b,operacion);									//Método creado al refactorizar.
 			}
 		}
 		double val = popPila();
@@ -89,4 +56,64 @@ public class RPN {
 		}
 		return val;
 	}
+	
+	void conversion_y_a_pila(int i) {																	
+		double numero;
+		int j;
+		String temp = "";
+		for (j = 0; (j < 100) && (Character.isDigit(commando.charAt(i)) || (commando.charAt(i) == '.')); j++, i++) {
+			temp = temp + String.valueOf(commando.charAt(i));
+		}
+		numero = Double.parseDouble(temp);
+		pushPila(numero);
+}
+
+	void realizar_operacion(double a, double b, char operacion) {
+		if (operacion == '+')
+			sumar(a, b);
+		else if (operacion == '-')
+			restar(a, b);
+		else if (operacion == '*')
+			multiplicar(a, b);
+		else if (operacion == '/')
+			dividir(a, b);
+		else if (operacion == '^')
+			potencia(a, b);
+		else if (operacion == '%')
+			resto(a, b);
+		else if (operacion != ' ')
+			throw new IllegalArgumentException();
+	}
+	
+	//CONJUNTO DE OPERACIONES DISPONIBLES
+		void sumar(double a, double b) {
+			b = popPila();
+			a = popPila();
+			pushPila(a + b);
+		}
+		void restar(double a, double b) {
+			b = popPila();
+			a = popPila();
+			pushPila(a - b);
+		}
+		void multiplicar(double a, double b) {
+			b = popPila();
+			a = popPila();
+			pushPila(a * b);
+		}
+		void dividir(double a, double b) {
+			b = popPila();
+			a = popPila();
+			pushPila(a / b);
+		}
+		void potencia(double a, double b) {
+			b = popPila();
+			a = popPila();
+			pushPila(Math.pow(a, b));
+		}
+		void resto(double a, double b) {
+			b = popPila();
+			a = popPila();
+			pushPila(a % b);
+		}
 }
